@@ -3,7 +3,7 @@
 Created on Wed Mar 29 11:33:49 2023
 
 INPUT: AirMSPI .hdf files
-OUTPUT:AirMSPI data products
+OUTPUT:AirMSPI data products for sdata input
 
 This is a Python 3.9.13 code to read AirMSPI L1B2 data and 
 format the data to perform aerosol retrievals using the 
@@ -34,11 +34,8 @@ import numpy as np
 import os
 import time
 
-def main(datapath,num_step,sequence_num,min_x,min_y,max_x,max_y,roi_x1,roi_x2,roi_y1,roi_y2):
+def main(datapath,num_step,sequence_num,num_int,num_pol,min_x,min_y,max_x,max_y,roi_x1,roi_x2,roi_y1,roi_y2):
     
-    #Channel indices 
-    num_int = 7 
-    num_pol = 3
 
     #Array Definitions
     wavelens = np.zeros((num_step,num_int))
@@ -70,6 +67,8 @@ def main(datapath,num_step,sequence_num,min_x,min_y,max_x,max_y,roi_x1,roi_x2,ro
     #Search for files with the correct names
     search_str = '*TERRAIN*.hdf'
     file_list = np.array(glob.glob(search_str))
+    dum_list = glob.glob(search_str)
+    raw_list = np.array(dum_list)
     
     # Get the number of files    
     num_files = len(file_list)
@@ -77,6 +76,44 @@ def main(datapath,num_step,sequence_num,min_x,min_y,max_x,max_y,roi_x1,roi_x2,ro
     # Check the number of files against the index to only read one measurement sequence
     #print("AirMSPI Files Found: ",num_files)
     sequence_files = file_list[sequence_num*5:sequence_num*5+num_step]
+    
+    # Loop through files within the sequence and sort by time (HHMMSS)
+    # and extract date and target name
+    #Filenaming strings 
+    #Measurement time as an integer
+    time_raw = np.zeros((num_files),dtype=int) 
+        
+    #Time, Date, and Target Name as a string
+    time_str_raw = []  
+    date_str_raw = []  
+    target_str_raw = [] 
+
+    #Start the for loop
+    for loop in range(num_files):
+        
+    # Select appropriate file
+
+            this_file = raw_list[loop]
+
+    # Parse the filename to get information
+        
+            words = this_file.split('_')
+            
+            date_str_raw.append(words[4])
+            time_str_raw.append(words[5])  # This will retain the "Z" designation
+            target_str_raw.append(words[6])
+            
+            temp = words[5]
+            hold = temp.split('Z')
+            time_hhmmss = int(hold[0])
+            time_raw[loop] = time_hhmmss
+
+    # Convert data to numpy arrays
+
+    date_str = np.array(date_str_raw)
+    time_str = np.array(time_str_raw)
+    target_str = np.array(target_str_raw)
+    #print(date_str)
     
     for num_step in range(num_step):
         #print(num_step)
@@ -192,10 +229,6 @@ def main(datapath,num_step,sequence_num,min_x,min_y,max_x,max_y,roi_x1,roi_x2,ro
                 
             # Get the navigation information if this is the center acquisition
         if(num_step == mid_step): #latitude and longitude chosen from nadir of step and stare
-                
-            #print("GETTING NAVIGATION")
-                    
-            # Set the datasets and read (Ancillary)
             evel_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
             lat_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
             long_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Longitude/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
@@ -229,11 +262,9 @@ def main(datapath,num_step,sequence_num,min_x,min_y,max_x,max_y,roi_x1,roi_x2,ro
             ipol[num_step,indx] = ipols[indx]
             qm[num_step,indx] = qms[indx]
             um[num_step,indx] = ums[indx]
-            #print('in',qms[indx],'out',qm[num_step,indx])
-    #print('final qm')
-    #print(qm[:])
+
         f.close()
     print('Done reading files')
-    return esd,E0_values,evel_coord,lat_coord,long_coord,i[:],view_zen[:],view_az[:],sun_zen[:],sun_az[:],ipol[:],qm[:],um[:]
+    return date_str,time_str,target_str,esd,E0_values,evel_coord,lat_coord,long_coord,i[:],view_zen[:],view_az[:],sun_zen[:],sun_az[:],ipol[:],qm[:],um[:]
 
 ### END MAIN FUNCTION
