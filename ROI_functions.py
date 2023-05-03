@@ -22,10 +22,10 @@ def image_crop(a):
         a[a == -999] = np.nan
         mid_row = a.shape[0] // 2
         mid_col = a.shape[1] // 2
-        start_row = mid_row - 524
-        end_row = mid_row + 524
-        start_col = mid_col - 524
-        end_col = mid_col + 524
+        start_row = mid_row - 262
+        end_row = mid_row + 262
+        start_col = mid_col - 262
+        end_col = mid_col + 262
         
         a = a[start_row:end_row, start_col:end_col]
         return a

@@ -230,7 +230,7 @@ def main(datapath,num_step,sequence_num,num_int,num_pol,min_x,min_y,max_x,max_y,
             # Get the navigation information if this is the center acquisition
         if(num_step == mid_step): #latitude and longitude chosen from nadir of step and stare
             evel_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
-            lat_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
+            lat_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Latitide/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
             long_coord = np.median(np.flipud(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Longitude/'][:][min_y:max_y,min_x:max_x])[roi_x1:roi_x2,roi_y1:roi_y2])   
 
             #____________________________STORE THE DATA____________________________#
