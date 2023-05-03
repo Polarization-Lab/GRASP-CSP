@@ -66,7 +66,7 @@ def getdata(f):
                 data_structure['865_data'][dataset_name] = r.image_crop(group7[dataset_name][()])  
             if dataset_name in group9:
                 data_structure['E0'][dataset_name] = group9[dataset_name][()]
-        print('made it here')
+        #print('made it here')
         data_structure['Sun_Distance'] = f['/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/'].attrs['Sun distance']
         data_structure['Elevation']= r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:])
         data_structure['Lat'] = r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Latitude/'][:])
