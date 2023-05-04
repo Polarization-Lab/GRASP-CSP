@@ -31,7 +31,7 @@ def main():
 
     # Set the length of one measurement sequence of step-and-stare observations
     # NOTE: This will typically be an odd number (9,7,5,...)
-    num_step = 5
+    num_step = 2
         
     # Set the index of the measurement sequence within the step-and-stare files
     # NOTE: This is 0 for the first sequence in the directory, 1 for the second group, etc.

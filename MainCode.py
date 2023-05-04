@@ -99,6 +99,7 @@ def main():
             date_str = np.array(date_str_raw)
             time_str = np.array(time_str_raw)
             target_str = np.array(target_str_raw)
+            
     
     for num_step in range(num_step):
         i = 0 + num_step

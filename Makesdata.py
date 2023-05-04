@@ -15,9 +15,9 @@ def main():
     
     picklepath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"   
     #picklepath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
-    outpath = picklepath
+    outpath = "C:/Users/ULTRASIP_1/Documents/ULTRASIP/AirMSPI_FIREXAQ/Retrievals/May423/FIREX1"
     os.chdir(picklepath)
-    ref_plane = 'scattering'
+    ref_plane = 'meridian'
     
     # open the pickle file for reading
     with open('FIREX1.pickle', 'rb') as f:
@@ -90,9 +90,17 @@ def main():
         
 # Loop through wavelengths
 
-    for group_name in data_dict.keys():
-        if '_data/I/' in group_name:
-            out_str = out_str + ' ' + str(int(group_name[0:3])/1000)
+    # for group_name in data_dict.keys():
+    #     if 'nm/0' in group_name:
+    #         out_str = out_str + ' ' + str(int(group_name[0:3])/1000)
+            
+    out_str = out_str +  str(0.355100000)
+    out_str = out_str + ' ' + str(0.377200000)
+    out_str = out_str + ' ' + str(0.443300000)
+    out_str = out_str + ' ' + str(0.469100000)
+    out_str = out_str + ' ' + str(0.553500000)
+    out_str = out_str + ' ' + str(0.659133333)
+    out_str = out_str + ' ' + str(0.863700000)
        
 
 # for loop in range(num_intensity):
@@ -141,33 +149,209 @@ def main():
     
     #sun_zenith angles
     for group_name in data_dict.keys():
-        if 'nm/' in group_name:
+        if 'nm/0' in group_name:
             wave = group_name.split("/")[0]
             num = group_name.split('/')[1]
             out_str = out_str + ' ' + str(data_dict[f"{wave}/{num}"]['Sun_zenith_med'])
+            print(data_dict[f"{wave}/{num}"]['Sun_zenith_med'])
+
             
     #view_zenith angles
     for group_name in data_dict.keys():
-        if 'nm/' in group_name:
+        if '355nm/4' in group_name:
             wave = group_name.split("/")[0]
             num = group_name.split('/')[1]
-            out_str = out_str + ' ' + str(data_dict[f"{wave}/{num}"]['View_zenith_med'])
-            
+            print(num)
+            for meas in range(int(num)+1):
+                print(f"{wave}/{meas}")
+                out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+                print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '380nm/4' in group_name:
+          wave = group_name.split("/")[0]
+          num = group_name.split('/')[1]
+          print(num)
+          for meas in range(int(num)+1):
+              print(f"{wave}/{meas}")
+              out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+              print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '445nm/4' in group_name:
+         wave = group_name.split("/")[0]
+         num = group_name.split('/')[1]
+         print(num)
+         for meas in range(int(num)+1):
+             print(f"{wave}/{meas}")
+             out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+             print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '470nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for i in range(3):
+                for meas in range(int(num)+1):
+                    print(f"{wave}/{meas}")
+                    out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+                    print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '555nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for meas in range(int(num)+1):
+                print(f"{wave}/{meas}")
+                out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+                print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '660nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for i in range(3):
+                for meas in range(int(num)+1):
+                    print(f"{wave}/{meas}")
+                    out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+                    print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+        if '865nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for i in range(3):
+                for meas in range(int(num)+1):
+                    print(f"{wave}/{meas}")
+                    out_str = out_str + ' ' + str(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+                    print(data_dict[f"{wave}/{meas}"]['View_zenith_med'])
+   
     #relative azimuth
+    n=0
     for group_name in data_dict.keys():
-        if 'nm/' in group_name:
+        if '355nm/4' in group_name:
             wave = group_name.split("/")[0]
             num = group_name.split('/')[1]
-            saz = data_dict[f"{wave}/{num}"]['Sun_azimuth_med']
-            vaz = data_dict[f"{wave}/{num}"]["View_azimuth_med"]
-        
-            # calculate the difference
-            raz = saz - vaz
-            if raz < 0:
-                raz = raz + 360
-                
+            print(num)
+            for meas in range(int(num)+1):
+                num = group_name.split('/')[1]
+                saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+                vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+                if saz >= 180: 
+                    saz = saz - 180
+                else:
+                    saz = saz + 180
+                # calculate the difference
+                raz = saz - vaz
+                if raz < 0:
+                    raz = raz + 360     
                 out_str = out_str + ' ' + str(raz)
-        
+                n=n+1
+        if '380nm/4' in group_name:
+          wave = group_name.split("/")[0]
+          num = group_name.split('/')[1]
+          print(num)
+          for meas in range(int(num)+1):
+              num = group_name.split('/')[1]
+              saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+              vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+              if saz >= 180: 
+                  saz = saz - 180
+              else:
+                  saz = saz + 180          
+              # calculate the difference
+              raz = saz - vaz
+              if raz < 0:
+                  raz = raz + 360     
+              out_str = out_str + ' ' + str(raz)
+              n=n+1
+        if '445nm/4' in group_name:
+         wave = group_name.split("/")[0]
+         num = group_name.split('/')[1]
+         print(num)
+         for meas in range(int(num)+1):
+             num = group_name.split('/')[1]
+             saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+             vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+             if saz >= 180: 
+                 saz = saz - 180
+             else:
+                saz = saz + 180         
+             # calculate the difference
+             raz = saz - vaz
+             if raz < 0:
+                 raz = raz + 360     
+             out_str = out_str + ' ' + str(raz)
+             n=n+1
+        if '470nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            for i in range(3):
+                print(i)
+                for meas in range(int(num)+1):
+                    num = group_name.split('/')[1]
+                    saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+                    vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+                if saz >= 180: 
+                    saz = saz - 180
+                else:
+                    saz = saz + 180                
+                    # calculate the difference
+                    raz = saz - vaz
+                if raz < 0:
+                    raz = raz + 360     
+                out_str = out_str + ' ' + str(raz)
+                n=n+1
+        if '555nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for meas in range(int(num)+1):
+                num = group_name.split('/')[1]
+                saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+                vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+                if saz >= 180: 
+                    saz = saz - 180
+                else:
+                    saz = saz + 180
+                # calculate the difference
+                raz = saz - vaz
+                if raz < 0:
+                    raz = raz + 360     
+                out_str = out_str + ' ' + str(raz)
+                n=n+1
+        if '660nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            print(num)
+            for i in range(3):
+                for meas in range(int(num)+1):
+                    num = group_name.split('/')[1]
+                    saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+                    vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+                    if saz >= 180: 
+                        saz = saz - 180
+                    else:
+                        saz = saz + 180
+                    # calculate the difference
+                    raz = saz - vaz
+                    if raz < 0:
+                        raz = raz + 360     
+                    out_str = out_str + ' ' + str(raz)
+                    n=n+1
+        if '865nm/4' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            for i in range(3):
+                for meas in range(int(num)+1):
+                    num = group_name.split('/')[1]
+                    saz = data_dict[f"{wave}/{meas}"]['Sun_azimuth_med']
+                    vaz = data_dict[f"{wave}/{meas}"]["View_azimuth_med"]
+                    if saz >= 180: 
+                        saz = saz - 180
+                    else:
+                        saz = saz + 180
+                    # calculate the difference
+                    raz = saz - vaz
+                    print(raz)
+                    if raz < 0:
+                        raz = raz + 360     
+                    out_str = out_str + ' ' + str(raz)
+                    n=n+1
+    print(n)
+
 
     
     #Measurements for each wavelength
