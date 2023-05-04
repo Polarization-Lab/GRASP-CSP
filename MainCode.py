@@ -21,8 +21,9 @@ def main():
     #I. User defined parameters#
     #Directories: path to AirMSPI data (datapath),
     #path to output sdata files (outpath).
-    datapath = "C:/Users/Clarissa/Documents/AirMSPI/Prescott/FIREX-AQ_8172019"
-    outpath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
+    #datapath = "C:/Users/Clarissa/Documents/AirMSPI/Prescott/FIREX-AQ_8172019"
+    datapath = "C:/Users/Clarissa/Documents/AirMSPI/Bakersfield707_Data/"
+    outpath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/Bakersfield"
     #datapath = "C:/Users/ULTRASIP_1/Documents/Bakersfield707_Data/"
     #outpath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/Bakersfield"
 
@@ -156,6 +157,6 @@ if __name__ == '__main__':
      
      # Open a file in binary mode and write the dictionary to it using pickle
      os.chdir(outpath)
-     with open('FIREX1.pickle', 'wb') as f:
+     with open('Bakersfield.pickle', 'wb') as f:
          pickle.dump(medians, f)
      
