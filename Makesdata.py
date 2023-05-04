@@ -13,7 +13,8 @@ import pickle
 
 def main(): 
     
-    picklepath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"   
+    #picklepath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"   
+    picklepath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
     outpath = picklepath
     os.chdir(picklepath)
     ref_plane = 'meridian'
@@ -140,41 +141,44 @@ def main():
     
     #sun_zenith angles
     for group_name in data_dict.keys():
-        if 'Sun_zenith/' in group_name:
-            out_str = out_str + ' ' + str(data_dict[group_name]['median'])
+        if 'nm/' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            out_str = out_str + ' ' + str(data_dict[f"{wave}/{num}"]['Sun_zenith_med'])
             
     #view_zenith angles
     for group_name in data_dict.keys():
-        if 'View_zenith/' in group_name:
-            out_str = out_str + ' ' + str(data_dict[group_name]['median'])
-    
+        if 'nm/' in group_name:
+            wave = group_name.split("/")[0]
+            num = group_name.split('/')[1]
+            out_str = out_str + ' ' + str(data_dict[f"{wave}/{num}"]['View_zenith_med'])
+            
     #relative azimuth
     for group_name in data_dict.keys():
-        # check if the key contains "Sun_azimuth"
-        if "/Sun_azimuth/0" in group_name:
-            # get the corresponding value for the key
-            saz = data_dict[group_name]['median']
-            # extract the number from the key string
+        if 'nm/' in group_name:
             wave = group_name.split("/")[0]
-            num = 0
-            print(wave,num)
-            # construct the corresponding view azimuth key
-            vaz_gname = f"{wave}/View_azimuth/{num}"
-            # get the corresponding view azimuth value
-            vaz = data_dict[vaz_gname]['median']
+            num = group_name.split('/')[1]
+            saz = data_dict[f"{wave}/{num}"]['Sun_azimuth_med']
+            vaz = data_dict[f"{wave}/{num}"]["View_azimuth_med"]
+        
             # calculate the difference
             raz = saz - vaz
             if raz < 0:
                 raz = raz + 360
                 
-            out_str = out_str + ' ' + str(raz)
+                out_str = out_str + ' ' + str(raz)
+        
+
     
     #Measurements for each wavelength
     for group_name in data_dict.keys():
-        if "355_data" in group_name: 
-            print(group_name)
+        if '355nm/' in group_name:
+           out_str = out_str +' '+ str(data_dict[group_name]['I_med'])
+    for group_name in data_dict.keys():
+        if '355nm/' in group_name:
+           out_str = out_str +' '+ str(data_dict[group_name]['I_med'])
             
-        
+            
         
     return out_str
     

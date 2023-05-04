@@ -21,17 +21,17 @@ def main():
     #I. User defined parameters#
     #Directories: path to AirMSPI data (datapath),
     #path to output sdata files (outpath).
-    #datapath = "C:/Users/Clarissa/Documents/AirMSPI/Prescott/FIREX-AQ_8172019"
-    #outpath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX2"
-    datapath = "C:/Users/ULTRASIP_1/Documents/Bakersfield707_Data/"
-    outpath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/Bakersfield"
+    datapath = "C:/Users/Clarissa/Documents/AirMSPI/Prescott/FIREX-AQ_8172019"
+    outpath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
+    #datapath = "C:/Users/ULTRASIP_1/Documents/Bakersfield707_Data/"
+    #outpath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/Bakersfield"
 
     # Change directory to the datapath
     os.chdir(datapath)
 
     # Set the length of one measurement sequence of step-and-stare observations
     # NOTE: This will typically be an odd number (9,7,5,...)
-    num_step = 1
+    num_step = 5
         
     # Set the index of the measurement sequence within the step-and-stare files
     # NOTE: This is 0 for the first sequence in the directory, 1 for the second group, etc.
@@ -111,41 +111,51 @@ def main():
         
         
         
-         #find ROI using first file and 660 nm data point 
+          #find ROI using first file and 660 nm data point 
         if i == 0:
-             #img = data['660nm/0']['I']
-             #img = r.image_crop(img)
-             roi_x, roi_y = [350,150] #r.choose_roi(img)
-             medians_dict['Sun_distance' + f"{num_step}"] = data['Sun_Distance'+ f"{num_step}"]
-             medians_dict['E0'] = data['E0'+ f"{num_step}"]
-             medians_dict['Elevation'] =  r.calculate_median(data['Elevation0'])[roi_x,roi_y]
-             medians_dict['Lat'] =  r.calculate_median(data['Lat0'])[roi_x,roi_y]
-             medians_dict['Long'] =  r.calculate_median(data['Long0'])[roi_x,roi_y]
-             medians_dict['Date'] = date_str[0]
-             medians_dict['Time'] = time_str[0]
-             medians_dict['Target'] = target_str[0]
-             medians_dict['ROI Coordinates'] = {   
-                 'x': roi_x,
-                 'y': roi_y
-                 }
+              img = data['660nm/0']['I']
+              img = r.image_crop(img)
+              roi_x, roi_y = r.choose_roi(img)
+              medians_dict['Sun_distance'] = data['Sun_Distance'+ f"{num_step}"]
+              medians_dict['E0'] = data['E0'+ f"{num_step}"]
+              medians_dict['Elevation'] =  r.calculate_median(data['Elevation0'])[roi_x,roi_y]
+              medians_dict['Lat'] =  r.calculate_median(data['Lat0'])[roi_x,roi_y]
+              medians_dict['Long'] =  r.calculate_median(data['Long0'])[roi_x,roi_y]
+              medians_dict['Date'] = date_str[0]
+              medians_dict['Time'] = time_str[0]
+              medians_dict['Target'] = target_str[0]
+              medians_dict['ROI Coordinates'] = {   
+                  'x': roi_x,
+                  'y': roi_y
+                  }
 
-        
-       # # print(data.keys())
-        keys_to_exclude = ['Sun_Distance', 'E0','Elevation', 'Lat', 'Long']
-        
-        for key in data.keys():
-            for values in data[key].keys():
-                medians_dict[(key, values)] = {'median':r.calculate_median(data[key][values])}
-               
+    for key in data.keys():
+        if 'nm' in key:
+            # Initialize a temporary dictionary to hold the median and std values
+            temp_dict = {}
+    
+            # Loop over each subkey (i.e., 'I', 'Q', 'U', etc.)
+            for subkey in data[key].keys():
+                print(subkey)
+                # Calculate the median and std of the values for this subkey
+                median_val = r.calculate_median(data[key][subkey])[roi_x,roi_y]
+                std_val = r.calculate_std(data[key][subkey])[roi_x,roi_y]
+                    
+                # Add the median and std values to the temporary dictionary
+                temp_dict[subkey + '_med'] = median_val
+                temp_dict[subkey + '_std'] = std_val
+    
+            # Add the temporary dictionary to the output dictionary, using the same key
+            medians_dict[key] = temp_dict
         
     return outpath, data,medians_dict
         
 ### END MAIN FUNCTION
 if __name__ == '__main__':
-     outpath, data_products,medians_dict  = main()
+     outpath, data_product, medians  = main()
      
-     # # Open a file in binary mode and write the dictionary to it using pickle
-     #  os.chdir(outpath)
-     #  with open('FIREX2.pickle', 'wb') as f:
-     #      pickle.dump(data_products, f)
+     # Open a file in binary mode and write the dictionary to it using pickle
+     os.chdir(outpath)
+     with open('FIREX1.pickle', 'wb') as f:
+         pickle.dump(medians, f)
      
