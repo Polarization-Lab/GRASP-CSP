@@ -13,11 +13,11 @@ import pickle
 
 def main(): 
     
-    #picklepath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"   
-    picklepath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
+    picklepath = "C:/Users/ULTRASIP_1/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"   
+    #picklepath = "C:/Users/Clarissa/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1"
     outpath = picklepath
     os.chdir(picklepath)
-    ref_plane = 'meridian'
+    ref_plane = 'scattering'
     
     # open the pickle file for reading
     with open('FIREX1.pickle', 'rb') as f:
@@ -28,7 +28,7 @@ def main():
     os.chdir(outpath) 
     
 # Generate the base output file name
-    outfile_base = 'RotfromScat'
+    outfile_base = f'Rotfrom{ref_plane}'
     
 # Generate an output file name
 
@@ -171,18 +171,167 @@ def main():
 
     
     #Measurements for each wavelength
-    for group_name in data_dict.keys():
-        if '355nm/' in group_name:
-           out_str = out_str +' '+ str(data_dict[group_name]['I_med'])
-    for group_name in data_dict.keys():
-        if '355nm/' in group_name:
-           out_str = out_str +' '+ str(data_dict[group_name]['I_med'])
+    for key in data_dict.keys():
+        if '355' in key:
+            first_subkey = next(iter(data_dict[key]))
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+    for key in data_dict.keys():
+        if '380' in key:
+            first_subkey = next(iter(data_dict[key]))
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
             
+    for key in data_dict.keys():
+        if '445' in key:
+            first_subkey = next(iter(data_dict[key]))
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+            
+    for key in data_dict.keys():
+        if '470' in key:
+            first_subkey = next(iter(data_dict[key]))
+            second_subkey = list(data_dict[key])[1]
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+            
+    for key in data_dict.keys():
+        if '470' in key:
+            if 'meridian' in ref_plane:
+                Q_med = data_dict[key]['Q_meridian_med']
+            if 'scattering' in ref_plane: 
+                Q_med = -data_dict[key]['Q_scatter_med']
+            out_str = out_str + ' ' + str(Q_med)
+            
+    for key in data_dict.keys():
+        if '470' in key:
+            if 'meridian' in ref_plane:
+                U_med = data_dict[key]['U_meridian_med']
+            if 'scattering' in ref_plane: 
+                U_med = -data_dict[key]['U_scatter_med']
+            out_str = out_str + ' ' + str(U_med)
+                
+    for key in data_dict.keys():
+        if '555' in key:
+            first_subkey = next(iter(data_dict[key]))
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+    
+    for key in data_dict.keys():
+        if '660' in key:
+            first_subkey = next(iter(data_dict[key]))
+            second_subkey = list(data_dict[key])[1]
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+            
+    for key in data_dict.keys():
+        if '660' in key:
+            if 'meridian' in ref_plane:
+                Q_med = data_dict[key]['Q_meridian_med']
+            if 'scattering' in ref_plane: 
+                Q_med = -data_dict[key]['Q_scatter_med']
+            out_str = out_str + ' ' + str(Q_med)
+            
+    for key in data_dict.keys():
+        if '660' in key:
+            if 'meridian' in ref_plane:
+                U_med = data_dict[key]['U_meridian_med']
+            if 'scattering' in ref_plane: 
+                U_med = -data_dict[key]['U_scatter_med']
+            out_str = out_str + ' ' + str(U_med)
+                
+    for key in data_dict.keys():
+        if '865' in key:
+            first_subkey = next(iter(data_dict[key]))
+            second_subkey = list(data_dict[key])[1]
+            I_med = data_dict[key][first_subkey]
+            out_str = out_str + ' ' + str(I_med)
+            
+    for key in data_dict.keys():
+        if '865' in key:
+            if 'meridian' in ref_plane:
+                Q_med = data_dict[key]['Q_meridian_med']
+            if 'scattering' in ref_plane: 
+                Q_med = -data_dict[key]['Q_scatter_med']
+            out_str = out_str + ' ' + str(Q_med)
+            
+    for key in data_dict.keys():
+        if '865' in key:
+            if 'meridian' in ref_plane:
+                U_med = data_dict[key]['U_meridian_med']
+            if 'scattering' in ref_plane: 
+                U_med = -data_dict[key]['U_scatter_med']
+            out_str = out_str + ' ' + str(U_med)
+        
+## ADDITIONAL PARAMETERS
+# NOTE: This is kludgy and GRASP seems to run without this being entirely correct
+
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 1)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 2)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 3)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 4)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 5)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 6)
+    out_str = out_str+'       0.00000000'  # Ground parameter (wave 7)
+    out_str = out_str+'       0'  # Gas parameter (wave 1)
+    out_str = out_str+'       0'  # Gas parameter (wave 2)
+    out_str = out_str+'       0'  # Gas parameter (wave 3)
+    out_str = out_str+'       0'  # Gas parameter (wave 4)
+    out_str = out_str+'       0'  # Gas parameter (wave 5)
+    out_str = out_str+'       0'  # Gas parameter (wave 6)
+    out_str = out_str+'       0'  # Gas parameter (wave 7)
+    out_str = out_str+'       0'  # Covariance matrix (wave 1)
+    out_str = out_str+'       0'  # Covariance matrix (wave 2)
+    out_str = out_str+'       0'  # Covariance matrix (wave 3)
+    out_str = out_str+'       0'  # Covariance matrix (wave 4)
+    out_str = out_str+'       0'  # Covariance matrix (wave 5)
+    out_str = out_str+'       0'  # Covariance matrix (wave 6)
+    out_str = out_str+'       0'  # Covariance matrix (wave 7)
+    out_str = out_str+'       0'  # Vertical profile (wave 1)
+    out_str = out_str+'       0'  # Vertical profile (wave 2)
+    out_str = out_str+'       0'  # Vertical profile (wave 3)
+    out_str = out_str+'       0'  # Vertical profile (wave 4)
+    out_str = out_str+'       0'  # Vertical profile (wave 5)
+    out_str = out_str+'       0'  # Vertical profile (wave 6)
+    out_str = out_str+'       0'  # Vertical profile (wave 7)
+    out_str = out_str+'       0'  # (Dummy) (wave 1)
+    out_str = out_str+'       0'  # (Dummy) (wave 2)
+    out_str = out_str+'       0'  # (Dummy) (wave 3)
+    out_str = out_str+'       0'  # (Dummy) (wave 4)
+    out_str = out_str+'       0'  # (Dummy) (wave 5)
+    out_str = out_str+'       0'  # (Dummy) (wave 6)
+    out_str = out_str+'       0'  # (Dummy) (wave 7)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 1)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 2)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 3)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 4)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 5)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 6)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 7)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 1)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 2)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 3)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 4)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 5)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 6)
+    out_str = out_str+'       0'  # (Extra Dummy) (wave 7)
+                   
+# Endline
+       
+    out_str = out_str+'\n'
+
+# Write out the line
+     
+    outputFile.write(out_str)
+
+# Close the output file
+
+    outputFile.close()                     
             
         
-    return out_str
+    return out_str, data_dict
     
 # ### END MAIN FUNCTION
 ### END MAIN FUNCTION
 if __name__ == '__main__':
-     outstr  = main()
+     outstr, data  = main()
