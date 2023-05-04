@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Apr 28 11:40:27 2023
+Created on Wed May  3 14:38:24 2023
 
 @author: ULTRASIP_1
 """
@@ -31,7 +31,7 @@ def main():
 
     # Set the length of one measurement sequence of step-and-stare observations
     # NOTE: This will typically be an odd number (9,7,5,...)
-    num_step = 1
+    num_step = 5
         
     # Set the index of the measurement sequence within the step-and-stare files
     # NOTE: This is 0 for the first sequence in the directory, 1 for the second group, etc.
@@ -41,10 +41,7 @@ def main():
     num_int = 7 
     num_pol = 3
     
-    #Define empty dictionaries 
-    
     medians_dict = {}
-    datastructure = {}
 
 # Get the list of files in the directory
     # NOTE: Python returns the files in a strange order, so they will need to be sorted by time
@@ -98,10 +95,10 @@ def main():
             date_str = np.array(date_str_raw)
             time_str = np.array(time_str_raw)
             target_str = np.array(target_str_raw)
-    
+    #print(date_str)
+    datastructure = {}
     for num_step in range(num_step):
-        i = 0 + num_step
-        print(num_step,i)
+        print(num_step)
         
         #get data structures 
         inputName = sequence_files[num_step]
@@ -109,43 +106,7 @@ def main():
         
         data =  gd.getdata(f,num_step,datastructure)
         
-        
-        
-         #find ROI using first file and 660 nm data point 
-        if i == 0:
-             #img = data['660nm/0']['I']
-             #img = r.image_crop(img)
-             roi_x, roi_y = [350,150] #r.choose_roi(img)
-             medians_dict['Sun_distance' + f"{num_step}"] = data['Sun_Distance'+ f"{num_step}"]
-             medians_dict['E0'] = data['E0'+ f"{num_step}"]
-             medians_dict['Elevation'] =  r.calculate_median(data['Elevation0'])[roi_x,roi_y]
-             medians_dict['Lat'] =  r.calculate_median(data['Lat0'])[roi_x,roi_y]
-             medians_dict['Long'] =  r.calculate_median(data['Long0'])[roi_x,roi_y]
-             medians_dict['Date'] = date_str[0]
-             medians_dict['Time'] = time_str[0]
-             medians_dict['Target'] = target_str[0]
-             medians_dict['ROI Coordinates'] = {   
-                 'x': roi_x,
-                 'y': roi_y
-                 }
-
-        
-       # # print(data.keys())
-        keys_to_exclude = ['Sun_Distance', 'E0','Elevation', 'Lat', 'Long']
-        
-        for key in data.keys():
-            for values in data[key].keys():
-                medians_dict[(key, values)] = {'median':r.calculate_median(data[key][values])}
-               
-        
-    return outpath, data,medians_dict
-        
+    return data
 ### END MAIN FUNCTION
 if __name__ == '__main__':
-     outpath, data_products,medians_dict  = main()
-     
-     # # Open a file in binary mode and write the dictionary to it using pickle
-     #  os.chdir(outpath)
-     #  with open('FIREX2.pickle', 'wb') as f:
-     #      pickle.dump(data_products, f)
-     
+     data_products  = main()

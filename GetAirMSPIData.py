@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Apr 28 10:28:07 2023
 
@@ -7,8 +6,9 @@ Created on Fri Apr 28 10:28:07 2023
 
 import h5py
 import ROI_functions as r
+import numpy as np
 
-def getdata(f):
+def getdata(f,num_step,data):
 
 
     channel355 = '/HDFEOS/GRIDS/355nm_band/Data Fields/';
@@ -30,49 +30,28 @@ def getdata(f):
         group5 = f[channel555]
         group6 = f[channel660]
         group7 = f[channel865]
-        group8 = f['/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/']
-        group9 = f['/Channel_Information/']
+
         
     
-        # Create a structure to store the data
-        data_structure = {
-            '355_data': {},
-            '380_data': {},
-            '445_data': {},
-            '470_data': {},
-            '555_data': {},
-            '660_data': {},
-            '865_data': {},
-            'E0':{}
-            }
-    
-        dataset_name = 'I','IPOL','Q_meridian','U_meridian','Q_scatter','U_scatter','View_azimuth','View_zenith','Sun_azimuth','Sun_zenith',  'Solar_irradiance_at_1_AU'
+        dataset_names = 'I','IPOL','Q_meridian','U_meridian','Q_scatter','U_scatter','View_azimuth','View_zenith','Sun_azimuth','Sun_zenith'
 
-        # Read the data from each group and store it in the structure
-        for dataset_name in dataset_name:
-            if dataset_name in group1: 
-                data_structure['355_data'][dataset_name] = r.image_crop(group1[dataset_name][()])        
-            if dataset_name in group2:
-                data_structure['380_data'][dataset_name] = r.image_crop(group2[dataset_name][()])
-            if dataset_name in group3:
-                data_structure['445_data'][dataset_name] = r.image_crop(group3[dataset_name][()])
-            if dataset_name in group4:
-                data_structure['470_data'][dataset_name] = r.image_crop(group4[dataset_name][()])
-            if dataset_name in group5:
-                data_structure['555_data'][dataset_name] = r.image_crop(group5[dataset_name][()])
-            if dataset_name in group6:
-                data_structure['660_data'][dataset_name] = r.image_crop(group6[dataset_name][()])
-            if dataset_name in group7:
-                data_structure['865_data'][dataset_name] = r.image_crop(group7[dataset_name][()])  
-            if dataset_name in group9:
-                data_structure['E0'][dataset_name] = group9[dataset_name][()]
-        #print('made it here')
-        data_structure['Sun_Distance'] = f['/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/'].attrs['Sun distance']
-        data_structure['Elevation']= r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:])
-        data_structure['Lat'] = r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Latitude/'][:])
-        data_structure['Long'] = r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Longitude/'][:])
+           # Loop over the groups and check if the dataset name exists
+        for group in [group1, group2, group3, group4, group5, group6, group7]:
+            wave = group.name.split("/")[3][0:5]
+            #print(wave)
+            data_key = f"{wave}/{num_step}"
+            data[data_key] = {}
+            for dataset_name in dataset_names:
+                if dataset_name in group:
+            # If the dataset name exists in the group, save the data under the same key as a subset labeled as dataset_name
+                    data[data_key][dataset_name] = r.image_crop(group[dataset_name][()])
+        data['E0'+f"{num_step}"] = f['/Channel_Information/Solar_irradiance_at_1_AU'][()]
+        data['Sun_Distance'+f"{num_step}"] = f['/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/'].attrs['Sun distance']
+        data['Elevation'+f"{num_step}"]= r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Elevation/'][:])
+        data['Lat'+f"{num_step}"] = r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Latitude/'][:])
+        data['Long'+f"{num_step}"] = r.image_crop(f['/HDFEOS/GRIDS/Ancillary/Data Fields/Longitude/'][:])
 
-        return(data_structure)
+    return(data)
 
 
        
