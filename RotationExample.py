@@ -11,14 +11,14 @@ import numpy as np
 import os
 import time
 
-#Data Point from Table B.4
+#Data Point from Table A.4
 # #478F Datapoint
 qm = -0.028720994
 um = -0.003678653
 qs = -0.028884614
 us = -0.0021799933
 vaz = 340.60052
-vza = 49.187294
+vza =  47.8 
 saz = 335.1774
 sza = 13.95994
 
@@ -41,7 +41,7 @@ stokesin = np.array([[qm], [um]]) #Meridian
 stokesins = np.array([[qs], [us]]) #Scattering
 
 #----------------Rotation from AirMSPI Scattering to GRASP Meridian---------#
-#Normal vectors from refernce plane Eqns B.1 and B.2
+#Normal vectors from refernece plane Eqns B.1 and B.2
 n_m = np.cross(z,k)/np.linalg.norm(np.cross(z,k))
 n_s = np.cross(i,k)/np.linalg.norm(np.cross(i,k))
 
