@@ -80,12 +80,12 @@ def  choose_roi(image):
 
         # Plot the original image with the selected region of interest highlighted
             axs[0].imshow(image, cmap='gray')
-            axs[0].add_patch(patches.Rectangle((x, y), 5, 5, linewidth=5, edgecolor='w', facecolor='none'))
+            axs[0].add_patch(patches.Rectangle((x, y), 5, 5, linewidth=5, edgecolor='g', facecolor='none'))
             axs[0].set_title('Selected Region of Interest')
 
             # Plot the standard deviation image with the selected region of interest highlighted
             im = axs[1].imshow(std_dev, cmap='jet')
-            axs[1].add_patch(patches.Rectangle((x, y),5,5,linewidth=5, edgecolor='w', facecolor='none'))
+            axs[1].add_patch(patches.Rectangle((x, y),5,5,linewidth=5, edgecolor='g', facecolor='none'))
             axs[1].set_title('Standard Deviation with Selected Region of Interest')
             cbar = fig.colorbar(im, ax=axs[1], fraction=0.046, pad=0.04)
 
