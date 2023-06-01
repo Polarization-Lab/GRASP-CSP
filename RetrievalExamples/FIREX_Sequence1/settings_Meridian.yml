@@ -4,7 +4,7 @@
 
 input:
     driver: sdata
-    file:  "/home/cdeleon/Documents/GitHub/GRASP-CSP/RetrievalExamples/FIREX1/Rotfrommeridian.sdat"
+    file:  "/home/cdeleon/ULTRASIP/AirMSPI_FIREXAQ/Retrievals/May2523/1FIREX/RotfromMerd.sdat"
   
 output:
     segment:
